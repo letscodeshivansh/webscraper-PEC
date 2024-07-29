@@ -1,10 +1,11 @@
-import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import hashlib
+import webbrowser as wb
+import wikipedia as wk
 
 def get_page_content(url):
+    """Fetch the content of the web page."""
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -14,42 +15,20 @@ def get_page_content(url):
         return None
 
 def extract_text(soup):
+    """Extract and return the main text content of the page."""
     text = soup.get_text(separator=' ', strip=True)
     return text
 
-def save_image(image_url, directory):
-    try:
-        response = requests.get(image_url)
-        response.raise_for_status()
-        
-        # Create a hash of the image URL to use as the filename
-        image_hash = hashlib.md5(image_url.encode('utf-8')).hexdigest()
-        image_name = f"{image_hash}.jpg"
-        
-        # Ensure the directory exists
-        os.makedirs(directory, exist_ok=True)
-        image_path = os.path.join(directory, image_name)
-
-        with open(image_path, 'wb') as f:
-            f.write(response.content)
-        print(f"Saved image: {image_path}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error downloading image {image_url}: {e}")
-
-def extract_images(soup, base_url, directory="fetched_images"):
-    # Check if the path exists and is not a directory
-    if os.path.exists(directory) and not os.path.isdir(directory):
-        # If it is a file, create a new directory with a unique name
-        directory = f"{directory}_new"
-    
+def extract_images(soup, base_url):
+    """Extract all image URLs from the page."""
     images = []
     for img in soup.find_all('img', src=True):
         img_url = urljoin(base_url, img['src'])
         images.append(img_url)
-        save_image(img_url, directory)  # Save each image
     return images
 
 def extract_hyperlinks(soup, base_url):
+    """Extract all hyperlinks and their texts from the page."""
     hyperlinks = []
     for a_tag in soup.find_all('a', href=True):
         href = urljoin(base_url, a_tag['href'])
@@ -58,6 +37,7 @@ def extract_hyperlinks(soup, base_url):
     return hyperlinks
 
 def get_heading(url):
+    """Fetch the heading of a linked page."""
     try:
         content = get_page_content(url)
         if content:

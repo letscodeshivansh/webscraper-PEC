@@ -69,7 +69,7 @@ def get_heading(url):
     return "No Title"
 
 def main():
-    url = "https://ndtv.com"  
+    url = "https://pwskills.com"  
     content = get_page_content(url)
     
     if content:
