@@ -23,7 +23,8 @@ def save_image(image_url, directory):
         response.raise_for_status()
         image_hash = hashlib.md5(image_url.encode('utf-8')).hexdigest()
         image_name = f"{image_hash}.jpg"
-
+        
+        # Ensure the directory exists
         os.makedirs(directory, exist_ok=True)
         image_path = os.path.join(directory, image_name)
 

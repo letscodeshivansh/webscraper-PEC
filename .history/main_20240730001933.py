@@ -21,9 +21,12 @@ def save_image(image_url, directory):
     try:
         response = requests.get(image_url)
         response.raise_for_status()
+        
+        # Create a hash of the image URL to use as the filename
         image_hash = hashlib.md5(image_url.encode('utf-8')).hexdigest()
         image_name = f"{image_hash}.jpg"
-
+        
+        # Ensure the directory exists
         os.makedirs(directory, exist_ok=True)
         image_path = os.path.join(directory, image_name)
 
@@ -34,7 +37,9 @@ def save_image(image_url, directory):
         print(f"Error downloading image {image_url}: {e}")
 
 def extract_images(soup, base_url, directory="fetched_images"):
+    # Check if the path exists and is not a directory
     if os.path.exists(directory) and not os.path.isdir(directory):
+        # If it is a file, create a new directory with a unique name
         directory = f"{directory}_new"
     
     images = []
@@ -64,7 +69,7 @@ def get_heading(url):
     return "No Title"
 
 def main():
-    url = "https://pec.edu.in"  
+    url = "https://openai.com"  
     content = get_page_content(url)
     
     if content:
