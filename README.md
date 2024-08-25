@@ -1,6 +1,6 @@
 # WebScraper-PEC 
 
-This project is a Python script that scrapes web pages to extract text content, images, and hyperlinks. It also fetches the headings of linked pages. The extracted images are saved locally in a directory.
+This project is a Python script used BeautifulSoup python library that scrapes web pages to extract text content, images, and hyperlinks. It also fetches the headings of linked pages. The extracted images are saved locally in a directory.
 
 ## Features
 
